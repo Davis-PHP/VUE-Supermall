@@ -19,7 +19,7 @@
       path: String,
       activeColor: {
         type: String,
-        default: '#1296db'
+        default: '#FF4374'
       }
     },
     data() {
