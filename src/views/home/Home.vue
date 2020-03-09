@@ -6,62 +6,9 @@
     <home-swiper :banner="banner"></home-swiper>
     <recommend-view :recommends="recommend"></recommend-view>
     <feature-view></feature-view>
-    <tab-controller :titles="tabTitle" class="tab-control"></tab-controller>
-    <goods-list :goods="goods['pop'].list"></goods-list>
+    <tab-controller :titles="tabTitle" class="tab-control" @tabClick="tabClick"></tab-controller>
+    <goods-list :goods="showGoods"></goods-list>
 
-
-    <ul>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
   </div>
 </template>
 
@@ -97,7 +44,13 @@
           'pop': {page: 0, list: []},
           'new': {page: 0, list: []},
           'sell': {page: 0, list: []},
-        }
+        },
+        currentType: 'pop'
+      }
+    },
+    computed: {
+      showGoods() {
+        return this.goods[this.currentType].list
       }
     },
     created() {
@@ -110,6 +63,19 @@
       this.getHomeGoods('sell');
     },
     methods: {
+      tabClick(index) {
+        switch (index) {
+          case 0:
+            this.currentType = 'pop';
+            break;
+          case 1:
+            this.currentType = 'new';
+            break;
+          case 2:
+            this.currentType = 'sell';
+            break;
+        }
+      },
       getHomeMultiData() {
         getHomeMultiData().then(res => {
           this.banner = res.data.banner.list;
