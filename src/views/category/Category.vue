@@ -120,7 +120,19 @@
       }
     },
     mounted() {
-      this.scroll = new BScroll(document.querySelector('.wrapper'))
+      const scroll = new BScroll(document.querySelector('.wrapper'), {
+        probeType: 3,
+        pullUpLoad: true
+      });
+      this.scroll = scroll;
+      scroll.on('scroll', (position) => {
+        // console.log(position);
+      });
+      scroll.on('pullingUp', (position) => {
+        console.log('上拉记载更多');
+        scroll.finishPullUp();
+
+      })
     }
 
   }

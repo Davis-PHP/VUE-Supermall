@@ -3,12 +3,14 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <home-swiper :banner="banner"></home-swiper>
-    <recommend-view :recommends="recommend"></recommend-view>
-    <feature-view></feature-view>
-    <tab-controller :titles="tabTitle" class="tab-control" @tabClick="tabClick"></tab-controller>
-    <goods-list :goods="showGoods"></goods-list>
-
+    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
+      <home-swiper :banner="banner"></home-swiper>
+      <recommend-view :recommends="recommend"></recommend-view>
+      <feature-view></feature-view>
+      <tab-controller :titles="tabTitle" class="tab-control" @tabClick="tabClick"></tab-controller>
+      <goods-list :goods="showGoods"></goods-list>
+    </scroll>
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
 
@@ -18,6 +20,9 @@
   import FeatureView from "./childComps/FeatureView";
 
   import NavBar from "components/common/navbar/NavBar";
+  import Scroll from "components/common/scroll/Scroll";
+  import BackTop from "components/common/backTop/BackTop";
+
   import TabController from "components/content/tabController/TabController";
   import GoodsList from "components/content/goods/GoodsList";
 
@@ -31,7 +36,9 @@
       HomeSwiper,
       RecommendView,
       TabController,
-      GoodsList
+      GoodsList,
+      Scroll,
+      BackTop
     },
     data() {
       return {
@@ -45,7 +52,8 @@
           'new': {page: 0, list: []},
           'sell': {page: 0, list: []},
         },
-        currentType: 'pop'
+        currentType: 'pop',
+        isShowBackTop: false
       }
     },
     computed: {
@@ -63,6 +71,12 @@
       this.getHomeGoods('sell');
     },
     methods: {
+      contentScroll(position) {
+        this.isShowBackTop = (-position.y) > 500;
+      },
+      backClick() {
+        this.$refs.scroll.scrollTo(0, 0, 500)
+      },
       tabClick(index) {
         switch (index) {
           case 0:
@@ -97,7 +111,9 @@
 
 <style scoped>
   #home {
-    padding-top: 44px;
+    /*padding-top: 44px;*/
+    height: 100vh;
+    position: relative;
   }
 
   .home-nav {
@@ -115,4 +131,18 @@
     top: 44px;
     z-index: 9;
   }
+
+  .content {
+    position: absolute;
+    top: 44px;
+    bottom: 49px;
+    right: 0;
+    left: 0;
+  }
+
+  /*.content {*/
+  /*  height: calc(100% - 93px);*/
+  /*  overflow: hidden;*/
+  /*  margin-top: 44px;*/
+  /*}*/
 </style>
