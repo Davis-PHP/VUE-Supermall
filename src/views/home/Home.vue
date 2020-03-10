@@ -28,6 +28,8 @@
 
   import {getHomeMultiData, getHomeGoods} from "network/home";
 
+  import {debounce} from 'common/utils'
+
   export default {
     name: "Home",
     components: {
@@ -56,11 +58,6 @@
         isShowBackTop: false
       }
     },
-    computed: {
-      showGoods() {
-        return this.goods[this.currentType].list
-      }
-    },
     created() {
       //请求首页多个数据
       this.getHomeMultiData();
@@ -71,10 +68,16 @@
       this.getHomeGoods('sell');
     },
     mounted() {
+      const refresh = debounce(this.$refs.scroll.refresh(), 100);
       //通过事件总线,监听goods item 图片是否加载完成
       this.$bus.$on('itemImgLoad', () => {
-        this.$refs.scroll.refresh(); //图片加载完成刷新一下scroll不然scroll计算的高度不确定,因为图片还没加载完成就计算了
+        refresh(); //图片加载完成刷新一下scroll不然scroll计算的高度不确定,因为图片还没加载完成就计算了
       })
+    },
+    computed: {
+      showGoods() {
+        return this.goods[this.currentType].list
+      }
     },
     methods: {
       loadMore() {
