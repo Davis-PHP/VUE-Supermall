@@ -68,7 +68,7 @@
       this.getHomeGoods('sell');
     },
     mounted() {
-      const refresh = debounce(this.$refs.scroll.refresh(), 100);
+      const refresh = debounce(this.$refs.scroll.refresh, 100);
       //通过事件总线,监听goods item 图片是否加载完成
       this.$bus.$on('itemImgLoad', () => {
         refresh(); //图片加载完成刷新一下scroll不然scroll计算的高度不确定,因为图片还没加载完成就计算了
