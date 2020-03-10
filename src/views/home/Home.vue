@@ -70,6 +70,12 @@
       this.getHomeGoods('new');
       this.getHomeGoods('sell');
     },
+    mounted() {
+      //通过事件总线,监听goods item 图片是否加载完成
+      this.$bus.$on('itemImgLoad', () => {
+        this.$refs.scroll.refresh(); //图片加载完成刷新一下scroll不然scroll计算的高度不确定,因为图片还没加载完成就计算了
+      })
+    },
     methods: {
       loadMore() {
         this.getHomeGoods(this.currentType)
