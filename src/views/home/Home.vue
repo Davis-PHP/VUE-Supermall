@@ -3,11 +3,12 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+    <tab-controller :titles="tabTitle" class="tab-control" @tabClick="tabClick" ref="tabController1" :class="{fixed: isTabFixed}" v-show="isTabFixed"></tab-controller>
     <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll" :pull-up-load="true" @pullingUp="loadMore">
-      <home-swiper :banner="banner"></home-swiper>
+      <home-swiper :banner="banner" @swiperImgLoad="swiperImgLoad"></home-swiper>
       <recommend-view :recommends="recommend"></recommend-view>
       <feature-view></feature-view>
-      <tab-controller :titles="tabTitle" class="tab-control" @tabClick="tabClick"></tab-controller>
+      <tab-controller :titles="tabTitle" @tabClick="tabClick" ref="tabController2" :class="{fixed: isTabFixed}"></tab-controller>
       <goods-list :goods="showGoods"></goods-list>
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
@@ -55,8 +56,18 @@
           'sell': {page: 0, list: []},
         },
         currentType: 'pop',
-        isShowBackTop: false
+        isShowBackTop: false,
+        tabOffsetTop: 0,
+        isTabFixed: false,
+        saveY: 0
       }
+    },
+    activated() {
+      this.$refs.scroll.scrollTo(0, this.saveY, 0);
+      this.$refs.scroll.refresh();
+    },
+    deactivated() {
+      this.saveY = this.$refs.scroll.getScrollY();
     },
     created() {
       //请求首页多个数据
@@ -80,11 +91,15 @@
       }
     },
     methods: {
+      swiperImgLoad() {
+        this.tabOffsetTop = this.$refs.tabController2.$el.offsetTop;
+      },
       loadMore() {
         this.getHomeGoods(this.currentType)
       },
       contentScroll(position) {
         this.isShowBackTop = (-position.y) > 500;
+        this.isTabFixed = (-position.y) > this.tabOffsetTop
       },
       backClick() {
         this.$refs.scroll.scrollTo(0, 0, 500)
@@ -101,6 +116,8 @@
             this.currentType = 'sell';
             break;
         }
+        this.$refs.tabController1.currentIndex = index;
+        this.$refs.tabController2.currentIndex = index;
       },
       getHomeMultiData() {
         getHomeMultiData().then(res => {
@@ -132,20 +149,30 @@
   .home-nav {
     color: #ffffff;
     background-color: var(--color-tint);
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 9;
+    /*position: fixed;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*top: 0;*/
+    /*z-index: 9;*/
   }
 
+  /*.fixed {*/
+  /*  position: fixed;*/
+  /*  left: 0;*/
+  /*  right: 0;*/
+  /*  top: 44px;*/
+  /*}*/
+
   .tab-control {
-    position: sticky;
-    top: 44px;
+    position: relative;
     z-index: 9;
+    /*position: sticky;*/
+    /*top: 44px;*/
+    /*z-index: 9;*/
   }
 
   .content {
+    overflow: hidden;
     position: absolute;
     top: 44px;
     bottom: 49px;

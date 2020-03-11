@@ -55,6 +55,9 @@
       },
       refresh() {
         this.scroll && this.scroll.refresh(); ///图片加载完成刷新一下scroll不然scroll计算的高度不确定,因为图片还没加载完成就计算了
+      },
+      getScrollY() {
+        return this.scroll ? this.scroll.y : 0;
       }
     }
   }
