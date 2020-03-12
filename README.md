@@ -1,6 +1,6 @@
 # supermall
 
-##Display
+## Display
 ![Display](./display.gif)
 
 ## Project setup
