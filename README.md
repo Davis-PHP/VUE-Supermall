@@ -1,5 +1,8 @@
 # supermall
 
+##Display
+![Display](./display.gif)
+
 ## Project setup
 ```
 npm install
