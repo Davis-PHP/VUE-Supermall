@@ -1,7 +1,7 @@
 # supermall
 
 ## Display
-![Display](./display.gif)
+![Display](./display1.gif)
 
 ## Project setup
 ```
